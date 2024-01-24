@@ -5,8 +5,24 @@
 步骤:
 1. [获取控制权](#获取控制权)
 2. [刷自己的第一个固件](#刷自己的第一个固件)
-3. 运行自己的脚本
-4. 运行自己的程序
+3. [自主控制三步走](./doc/README.md)
+    - [ ] [只替换大模型](./doc/README.md#step-1) 进行中
+    - [ ] 只用原生的唤醒功能, 使用自己的 ASR 和 TTS
+    - [ ] 使用自己的唤醒程序, 全部都是自己的服务
+
+琐碎的点:
+
+- [x] [主要服务分析](./doc/services.md)
+- [x] [逆向方法](./doc/reverse-engineering.md)
+- [x] [音箱上的自定义程序](./src/apps/aivs-monitor/)
+- [x] [交叉编译环境](./src/cross-build-env/)
+- [ ] [Web Server](./src/server/)
+    - [x] 接收音箱对话记录
+    - [x] 使用 Github Copilot 生成应答
+    - [ ] 用音箱播放应答
+- [ ] gdb-server(host=arm) + gdb(target=arm)
+- [ ] open-mico-aivs-lab
+- [ ] open-mipns-sai (使用 [porcupine](https://github.com/Picovoice/porcupine) 或 [kaldi](https://github.com/kaldi-asr/kaldi))
 
 ---
 
@@ -168,11 +184,9 @@
     root@LX01:/# 
     ```
 
-    ifconfig 查看是否已经连接到了局域网 (如果刷机之前就没有连接到局域网, 可以刷之前连一次, 或者看后续"手动连家里wifi"的步骤)
-
+    ifconfig 查看是否已经连接到了局域网 (如果刷机之前就没有连接到局域网, 可以刷之前连一次, 或者看后续"手动连家里wifi"的步骤)  
     `ps | grep dropbear` 应该也能看到进程, 这时候我们就可以 `ssh root@x.x.x.x` 到小爱音箱了
 
     可能遇到的问题:
-    - no matching host key type found. Their offer: ssh-rsa
-
+    - no matching host key type found. Their offer: ssh-rsa  
         增加ssh参数, 使用类似 `ssh -oHostKeyAlgorithms=+ssh-rsa root@x.x.x.x` 即可
