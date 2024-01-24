@@ -1,0 +1,9 @@
+fastapi~=0.109.0
+uvicorn~=0.26.0
+webrtcvad~=2.0.10
+pyaudio~=0.2.14
+numpy~=1.26.3
+scipy~=1.11.4
+requests~=2.31.0
+
+pydantic~=2.5.3
