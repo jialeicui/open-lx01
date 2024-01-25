@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 import uvicorn
@@ -7,6 +8,7 @@ from api.model import MicoMessage
 from api.persona import HISTORY_TEACHER
 from audio.asr import audio_to_text
 from audio.vad import SpeechDetector
+from common.constants import SESSION_TIMEOUT_SECONDS
 from llm.copilot import GithubCopilot
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,10 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+# TODO support multiple sessions and prompts switching
+gpt = GithubCopilot(prompt=HISTORY_TEACHER)
+last_message_time: int = 0
 
 
 # api for automatic speech recognition, accepts audio stream
@@ -41,9 +47,16 @@ async def message(body: MicoMessage) -> str:
     if not body.payload.is_final:
         return ""
 
+    # TODO support multiple sessions
+    global last_message_time
+    now = datetime.datetime.now().timestamp()
+    if now - last_message_time > SESSION_TIMEOUT_SECONDS:
+        gpt.new_session()
+    last_message_time = now
+
+    # TODO support new session trigger by user message
     text = body.payload.results[0].text
     logger.info(f"received text: {text}")
-    gpt = GithubCopilot(prompt=HISTORY_TEACHER)
     text = gpt.chat(text)
     logger.info(f"response text: {text}")
     return text

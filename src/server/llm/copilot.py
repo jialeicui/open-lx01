@@ -47,6 +47,9 @@ class GithubCopilot:
             content = json.load(f)
             return content["github.com"]["oauth_token"]
 
+    def new_session(self) -> None:
+        self.messages = []
+
     def get_auth_token(self) -> str:
         url = "https://api.github.com/copilot_internal/v2/token"
         headers = {
