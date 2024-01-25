@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI, WebSocket
 
 from api.model import MicoMessage
+from api.persona import HISTORY_TEACHER
 from audio.asr import audio_to_text
 from audio.vad import SpeechDetector
 from llm.copilot import GithubCopilot
@@ -36,15 +37,16 @@ async def audio(websocket: WebSocket):
 
 
 @app.post("/message")
-async def message(body: MicoMessage) -> None:
+async def message(body: MicoMessage) -> str:
     if not body.payload.is_final:
-        return
+        return ""
 
     text = body.payload.results[0].text
     logger.info(f"received text: {text}")
-    gpt = GithubCopilot()
+    gpt = GithubCopilot(prompt=HISTORY_TEACHER)
     text = gpt.chat(text)
     logger.info(f"response text: {text}")
+    return text
 
 
 async def act(text: str) -> None:

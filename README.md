@@ -16,10 +16,10 @@
 - [x] [逆向方法](./doc/reverse-engineering.md)
 - [x] [音箱上的自定义程序](./src/apps/aivs-monitor/)
 - [x] [交叉编译环境](./src/cross-build-env/)
-- [ ] [Web Server](./src/server/)
+- [x] [Web Server](./src/server/)
     - [x] 接收音箱对话记录
     - [x] 使用 Github Copilot 生成应答
-    - [ ] 用音箱播放应答
+    - [x] 用音箱播放应答
 - [ ] gdb-server(host=arm) + gdb(target=arm)
 - [ ] open-mico-aivs-lab
 - [ ] open-mipns-sai (使用 [porcupine](https://github.com/Picovoice/porcupine) 或 [kaldi](https://github.com/kaldi-asr/kaldi))

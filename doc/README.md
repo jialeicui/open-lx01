@@ -45,12 +45,12 @@
 - [x] 刷机方法参考主页 [README](../README.md)
 - [x] 监控对话记录并发送出来的 [aivs-monitor](../src/apps/aivs-monitor/)
     - [X] 监控和发送
-    - [ ] mute 原生应答
+    - [x] mute 原生应答
     - [ ] 支持 Server 配置
-- [ ] 配合的 [Web Server](../src/server/)
+- [x] 配合的 [Web Server](../src/server/)
     - [x] 接收对话消息交给 LLM 生成应答
     - [x] 支持 Github Copilot 生成应答 (不用额外买GPT服务了)
-    - [ ] 调用小米服务器或者音箱服务播放应答
+    - [x] 调用小米服务器或者音箱服务播放应答
 
 
 ```mermaid
