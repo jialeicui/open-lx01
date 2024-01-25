@@ -24,6 +24,9 @@
 - [ ] open-mico-aivs-lab
 - [ ] open-mipns-sai (使用 [porcupine](https://github.com/Picovoice/porcupine) 或 [kaldi](https://github.com/kaldi-asr/kaldi))
 
+
+https://github.com/jialeicui/open-lx01/assets/3217223/b5e0a511-1a28-42c8-9462-f9f20279fd30
+
 ---
 
 ### 获取控制权
