@@ -31,7 +31,7 @@
 ### TTS
 
 文本转语音 (Text to Speech), 就是把文字念出来, 平时抖音上常听到的那些语音, 很多都是用的微软的 tts 服务生成出来的 ("那个男人叫小帅")  
-完全替换可能顺便就用 Paddle speech, 或者微软的免费款 tts, 或者其他一些开源的, 比如 [评述味道的tts](https://github.com/X-LANCE/StoryTTS)
+完全替换可能顺便就用 Paddle speech, 或者微软的免费款 tts, 或者其他一些开源的, 比如 [评书味道的tts](https://github.com/X-LANCE/StoryTTS)
 
 ## step 1
 

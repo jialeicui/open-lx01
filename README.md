@@ -32,7 +32,7 @@
 
 总结步骤如下:
 
-1. 淘宝买一个 USB 转 TTL 的刷机线, 3快钱-7快钱不等
+1. 淘宝买一个 USB 转 TTL 的刷机线, 3块钱-7块钱不等 (小爱音箱mini咸鱼30块钱左右, 电烙铁+焊锡20块钱)
 2. 拆机, 找到电路板上的 TX/RX/GND 焊接上刷机线
     - 这里注意电路板上 TX/RX 标识不止一处, 使用MI标识右下角的那组
     - GND -> GND
@@ -190,3 +190,10 @@
     可能遇到的问题:
     - no matching host key type found. Their offer: ssh-rsa  
         增加ssh参数, 使用类似 `ssh -oHostKeyAlgorithms=+ssh-rsa root@x.x.x.x` 即可
+
+### 您可能感兴趣的链接:
+
+- https://github.com/duhow/xiaoai-patch
+- https://github.com/yihong0618/xiaogpt
+- https://github.com/Yonsm/MiService
+- https://github.com/richfelker/musl-cross-make
