@@ -1,0 +1,90 @@
+diff --git a/etc/init.d/dropbear b/etc/init.d/dropbear
+index b2d2719..45eeb4f 100755
+--- a/etc/init.d/dropbear
++++ b/etc/init.d/dropbear
+@@ -53,8 +53,7 @@ dropbear_instance()
+ 		MaxAuthTries mdns ipaddrs
+ 
+ 	validate_section_dropbear "${1}" || {
+-		echo "validation failed"
++		echo "validation failed and skip"
+-		return 1
+ 	}
+ 
+ 	[ -n "${Interface}" ] && {
+@@ -64,7 +62,6 @@ dropbear_instance()
+ 		}
+ 	}
+ 
+-	[ "${enable}" = "0" ] && return 1
+ 	PIDCOUNT="$(( ${PIDCOUNT} + 1))"
+ 	local pid_file="/var/run/${NAME}.${PIDCOUNT}.pid"
+ 
+@@ -111,20 +108,12 @@ keygen()
+ load_interfaces()
+ {
+ 	config_get interface "$1" Interface
+-	config_get enable "$1" enable 1
+-
+-	[ "${enable}" = "1" ] && interfaces=" ${interface} ${interfaces}"
++	interfaces=" ${interface} ${interfaces}"
+ }
+ 
+ start_service()
+ {
+-	ssh_en=`cat /data/ssh_en 2>/dev/null`
+-	ssh_en_bind=`cat /data/.ssh_en 2>/dev/null`
+-	ssh_en_tmp=`cat /tmp/ssh_en 2>/dev/null`
+-	channel=`micocfg_channel 2>/dev/null`
+-	if [ "$ssh_en" != "1" -a "$ssh_en_bind" != "1" -a "$ssh_en_tmp" != "1" -a "$channel" = "release" ]; then
+-		return 0                                                                                  
+-	fi
++	mkdir -p /data/etc/dropbear
+ 	[ -s /data/etc/dropbear/dropbear_rsa_host_key ] || keygen
+ 
+ 	. /lib/functions.sh
+diff --git a/etc/inittab b/etc/inittab
+index 7a6c352..94276b8 100644
+--- a/etc/inittab
++++ b/etc/inittab
+@@ -1,3 +1,3 @@
+ ::sysinit:/etc/init.d/rcS S boot
+ ::shutdown:/etc/init.d/rcS K shutdown
+-::askconsole:/bin/login
++::askconsole:/bin/sh --login
+diff --git a/etc/pam.d/common-auth b/etc/pam.d/common-auth
+index 111e32a..c610144 100644
+--- a/etc/pam.d/common-auth
++++ b/etc/pam.d/common-auth
+@@ -8,10 +8,10 @@
+ # traditional Unix authentication mechanisms.
+ #
+ 
+-auth sufficient libmico-pam.so
+-account sufficient libmico-pam.so
++#auth sufficient libmico-pam.so
++#account sufficient libmico-pam.so
+ # here are the per-package modules (the "Primary" block)
+-# auth	[success=1 default=ignore]	pam_unix.so nullok_secure
++ auth	[success=1 default=ignore]	pam_unix.so nullok_secure
+ # here's the fallback if no module succeeds
+ auth	requisite			pam_deny.so
+ # prime the stack with a positive return value if there isn't one already;
+diff --git a/etc/rc.d/S99dropbear b/etc/rc.d/S99dropbear
+new file mode 120000
+index 0000000..44af88d
+--- /dev/null
++++ b/etc/rc.d/S99dropbear
+@@ -0,0 +1 @@
++../init.d/dropbear
+\ No newline at end of file
+diff --git a/etc/shadow b/etc/shadow
+index 9383c5d..058f9df 100644
+--- a/etc/shadow
++++ b/etc/shadow
+@@ -1,4 +1,4 @@
+-root:$1$6QTE6j6z$lVroJsorN7M7F2h1mrdIS0:18128:0:99999:7:::
++root:$1$xiaoai$803hWklCcQwX7v5gYP6pB0:18128:0:99999:7:::
+ daemon:*:0:0:99999:7:::
+ ftp:*:0:0:99999:7:::
+ network:*:0:0:99999:7:::

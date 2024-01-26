@@ -67,7 +67,8 @@ https://github.com/jialeicui/open-lx01/assets/3217223/b5e0a511-1a28-42c8-9462-f9
 
 ### 刷自己的第一个固件
 
-这步我们的目的可能是让音箱默认开 ssh, 也可能是因为我们不知道密码, 想进 shell, 这里一起搞定
+这步我们的目的可能是让音箱默认开 ssh, 也可能是因为我们不知道密码, 想进 shell, 这里一起搞定  
+(下面几个步骤的自动化脚本参考 [打包](./src/pack/))
 
 1. 下载官方固件, 
     - [1.56.1](https://cdn.cnbj1.fds.api.mi-img.com/xiaoqiang/rom/lx01/mico_firmware_c1cac_1.56.1.bin)
@@ -138,7 +139,7 @@ https://github.com/jialeicui/open-lx01/assets/3217223/b5e0a511-1a28-42c8-9462-f9
         说明: 1 是计算方式 MD5, 具体可以 `man openssl-passwd` 查看更多帮助
 
         修改 `squashfs-root/etc/shadow` 的 root 那一行, 改成
-        `root:$1$xiaoai$803hWklCcQwX7v5gYP6pB0:18128:0:99999:7::` 保存
+        `root:$1$xiaoai$803hWklCcQwX7v5gYP6pB0:18128:0:99999:7:::` 保存
 
         这样就把 root 的密码修改成了 root, 如果前面我们尝试登陆的时候发现是 dsa 校验, 那么我们还需要修改校验方式为默认, 修改方法如下:
 
@@ -149,10 +150,9 @@ https://github.com/jialeicui/open-lx01/assets/3217223/b5e0a511-1a28-42c8-9462-f9
     - #### enable sshd
 
         说明: 固件里使用 dropbear 作为 ssh server (轻量)
+        修改 etc/init.d/dropbear 启动脚本(较复杂, 可参考 [patch](./src/pack/patches/001.patch))
         
         ```sh
-        # 创建工作目录, 具体原因可以查看 squashfs-root/etc/init.d/dropbear
-        sudo mkdir squashfs-root/data/etc/dropbear/
         # 自动启动
         sudo ln -s ../init.d/dropbear squashfs-root/etc/rc.d/S96dropbear
         ```
