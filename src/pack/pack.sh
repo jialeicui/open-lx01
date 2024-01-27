@@ -29,6 +29,10 @@ for patch in $PATCHES; do
 	patch -p1 < $patch
 done
 
+if [ -d $BASE_DIR/root ]; then
+	rsync -av $BASE_DIR/root/ .
+fi
+
 popd
 
 mksquashfs squashfs-root rootfs.img -comp xz -b 256K -noappend && mv rootfs.img $BASE_DIR/rootfs.img

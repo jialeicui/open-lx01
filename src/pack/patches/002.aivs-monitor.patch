@@ -1,0 +1,33 @@
+diff --git a/etc/init.d/aivs_monitor b/etc/init.d/aivs_monitor
+new file mode 100755
+index 0000000..b4a6bf4
+--- /dev/null
++++ b/etc/init.d/aivs_monitor
+@@ -0,0 +1,19 @@
++#!/bin/sh /etc/rc.common
++
++START=85
++USE_PROCD=1
++DEBUG=0
++
++start_service() {
++    procd_open_instance
++    procd_set_param command /usr/bin/aivs-monitor
++    procd_set_param stdout 0
++    procd_set_param stderr 0
++    procd_set_param respawn 3600 5 0
++    procd_close_instance
++}
++
++stop_service() {
++    procd_kill "aivs-monitor"
++    kill -9 `ps|grep "/usr/bin/aivs-monitor"|grep -v grep|awk '{print $1}'`
++}
+diff --git a/etc/rc.d/S99aivs-monitor b/etc/rc.d/S99aivs-monitor
+new file mode 120000
+index 0000000..3a68593
+--- /dev/null
++++ b/etc/rc.d/S99aivs-monitor
+@@ -0,0 +1 @@
++../init.d/aivs_monitor
+\ No newline at end of file

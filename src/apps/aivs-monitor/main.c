@@ -11,6 +11,7 @@ CURL *curl;
 struct curl_slist *headers = NULL;
 int current_round = 0;
 int thread_processed_rount = 0;
+const char *instruction_json_path = "/tmp/mico_aivs_lab/instruction.log";
 
 void speaker_pause() {
     // ubus call mediaplayer player_play_operation {\"action\":\"pause\"}
@@ -108,8 +109,15 @@ void mute_speaker_thread(void *arg) {
     printf("mute speaker thread exit\n");
 }
 
+void wait_for_message_file_ready() {
+    // wait for message file ready
+    while (access(instruction_json_path, F_OK) != 0) {
+        usleep(1000 * 1000);
+    }
+}
+
 int main() {
-    const char *instruction_json_path = "/tmp/mico_aivs_lab/instruction.log";
+    wait_for_message_file_ready();
 
     FILE *json_file = fopen(instruction_json_path, "r");
     fseek(json_file, 0, SEEK_END);
