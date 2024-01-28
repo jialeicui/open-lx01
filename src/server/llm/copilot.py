@@ -13,12 +13,11 @@ class GithubCopilot:
         if api_key is None:
             api_key = self.get_host_key()
         self.api_key = api_key
-        self.auth_token = self.get_auth_token()
         self.messages = []
         if prompt:
             self.messages.append({"role": "system", "content": prompt})
+
         self.headers = {
-            "Authorization": f"Bearer {self.auth_token}",
             "User-Agent": "GitHubCopilotChat/0.8.0",
             "Accept": "*/*",
             "Accept-Encoding": "gzip,deflate,br",
@@ -33,6 +32,7 @@ class GithubCopilot:
             ),
             "X-Request-Id": "-".join([self.random_hex(i) for i in [8, 4, 4, 4, 12]]),
         }
+        self._refresh_auth_token()
 
     @staticmethod
     def random_hex(len: int) -> str:
@@ -56,7 +56,12 @@ class GithubCopilot:
             "Authorization": f"token {self.api_key}",
         }
         response = requests.get(url, headers=headers).json()
+        print(json.dumps(response))
         return response["token"]
+
+    def _refresh_auth_token(self) -> None:
+        token = self.get_auth_token()
+        self.headers["Authorization"] = f"Bearer {token}"
 
     def chat(self, content: str, temperature: float = 0.5) -> str:
         """Get code from Github Copilot API"""
@@ -70,8 +75,11 @@ class GithubCopilot:
             "n": 1,
             "stream": False,
         }
-        response = requests.post(url, headers=self.headers, json=data).json()
-        msg = response["choices"][0]["message"]
+        response = requests.post(url, headers=self.headers, json=data)
+        if response.status_code == 401:
+            self._refresh_auth_token()
+            response = requests.post(url, headers=self.headers, json=data)
+        msg = response.json()["choices"][0]["message"]
         self.messages.append(msg)
         return msg["content"]
 
