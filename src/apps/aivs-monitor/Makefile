@@ -14,7 +14,9 @@ build:
 		-I ../dists/include \
 		-L ../dists/lib \
 		-lcurl \
+		-ljson-c \
 		-o aivs-monitor \
+		json.c \
 		main.c
 
 build-all: build-curl build-with-docker
