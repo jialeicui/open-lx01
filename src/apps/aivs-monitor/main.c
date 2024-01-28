@@ -12,6 +12,13 @@ struct curl_slist *headers = NULL;
 int current_round = 0;
 int thread_processed_rount = 0;
 const char *instruction_json_path = "/tmp/mico_aivs_lab/instruction.log";
+const char *default_server_url = "http://10.0.0.196:8007/message";
+// full match
+const char *keywords[] = {
+    "停",
+    "关灯",
+    "开灯",
+};
 
 void speaker_pause() {
     // ubus call mediaplayer player_play_operation {\"action\":\"pause\"}
@@ -19,6 +26,30 @@ void speaker_pause() {
     if (rc != 0) {
         printf("pause speaker failed\n");
     }
+}
+
+int is_blocklist_keyword(const char *text) {
+    // the text must contains '"is_final": true,' to make sure it's the final result
+    if (strstr(text, "\"is_final\":true,") == NULL) {
+        return 0;
+    }
+
+    // TODO pass the keywords from the outside to make it more flexible and configurable
+    int len = sizeof(keywords) / sizeof(keywords[0]);
+    for (int i = 0; i < len; i++) {
+        char buf[1024] = {0};
+        // the text must contains the '"text":"{text}"}'
+        int rc = snprintf(buf, sizeof(buf), "\"text\":\"%s\"}", keywords[i]);
+        if (rc < 0) {
+            printf("snprintf failed\n");
+            continue;
+        }
+        printf("check contains %s\n", buf);
+        if (strstr(text, buf) != NULL) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int speaker_playing() {
@@ -66,8 +97,7 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char *userdata) {
 }
 
 
-int send_context_to_server(const char *context) {
-    const char * url = "http://192.168.1.14:8080/message";
+int send_context_to_server(const char *url, const char *context) {
     printf("send context to server: %s\n", context);
     char body_buffer[1024 * 2] = {0};
 
@@ -116,6 +146,22 @@ void wait_for_message_file_ready() {
     }
 }
 
+const char* get_server_url() {
+    const char *file = "/data/aivs_monitor/server_url";
+    FILE *fp = fopen(file, "r");
+    if (fp == NULL) {
+        printf("open file %s failed, use default\n", file);
+        return default_server_url;
+    }
+
+    char *buf = calloc(1, 1024);
+    while (fgets(buf, 1024, fp) != NULL) {
+        break;
+    }
+    fclose(fp);
+    return buf;
+}
+
 int main() {
     wait_for_message_file_ready();
 
@@ -142,6 +188,8 @@ int main() {
         return -1;
     }
 
+    const char *server_url = get_server_url();
+
     char buf[1024];
     while (1) {
         ssize_t n = read(fd, buf, sizeof(buf));
@@ -159,11 +207,6 @@ int main() {
             laste_offset = 0;
             current_round += 1;
             thread_processed_rount = current_round;
-            pthread_t tid;
-            int rc = pthread_create(&tid, NULL, (void *)mute_speaker_thread, NULL);
-            if (rc != 0) {
-                printf("create thread failed\n");
-            }
 
             continue;
         } else if (current_offset == laste_offset) {
@@ -180,7 +223,24 @@ int main() {
                 continue;
             }
 
-            send_context_to_server(buf);
+            const char* final_sig = "\"is_final\":true,";
+            if (strstr(buf, final_sig) == NULL) {
+                printf("not final result\n");
+                continue;
+            }
+
+            if (is_blocklist_keyword(buf)) {
+                printf("blocklist keyword detected\n");
+                continue;
+            }
+
+            pthread_t tid;
+            int rc = pthread_create(&tid, NULL, (void *)mute_speaker_thread, NULL);
+            if (rc != 0) {
+                printf("create thread failed\n");
+            }
+
+            send_context_to_server(server_url, buf);
         }
         laste_offset = ftell(json_file);
     }
