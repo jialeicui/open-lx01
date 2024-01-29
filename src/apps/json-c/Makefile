@@ -1,4 +1,4 @@
-VER ?= "0.17-20230812"
+VER ?= "0.11-20130402"
 DOWNLOAD_URL ?= "https://github.com/json-c/json-c/archive/json-c-$(VER).tar.gz"
 PREFIX ?= 
 DESTDIR ?= $(PWD)/../dists
@@ -16,7 +16,7 @@ build:
 	&& wget -c $(DOWNLOAD_URL) -O $(NAME).tar.gz \
 	&& tar -xvf $(NAME).tar.gz -C $(NAME) --strip-components=1 \
 	&& cd $(NAME) \
-	&& cmake -DCMAKE_INSTALL_PREFIX=$(PREFIX) . \
+	&& ./configure --host=$(HOST) --prefix=$(PREFIX) CC=$(CC) \
 	&& make -j$(nproc) \
 	&& make install DESTDIR=$(DESTDIR) \
 	&& cd ../ && rm -rf $NAME

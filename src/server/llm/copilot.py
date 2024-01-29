@@ -56,7 +56,6 @@ class GithubCopilot:
             "Authorization": f"token {self.api_key}",
         }
         response = requests.get(url, headers=headers).json()
-        print(json.dumps(response))
         return response["token"]
 
     def _refresh_auth_token(self) -> None:

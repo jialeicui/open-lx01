@@ -27,3 +27,13 @@ class MicoMsgPayload(BaseModel):
 class MicoMessage(BaseModel):
     header: MicoMsgHeader
     payload: MicoMsgPayload
+
+
+class MessageResponseData(BaseModel):
+    action: str
+    tts: Optional[str] = None
+
+
+class MessageResponse(BaseModel):
+    code: int
+    data: MessageResponseData

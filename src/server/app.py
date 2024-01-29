@@ -4,15 +4,15 @@ import logging
 import uvicorn
 from fastapi import FastAPI, WebSocket
 
-from api.model import MicoMessage
+from api.model import MessageResponse, MessageResponseData, MicoMessage
 from api.persona import HISTORY_TEACHER
 from audio.asr import audio_to_text
 from audio.vad import SpeechDetector
 from common.constants import SESSION_TIMEOUT_SECONDS
 from llm.copilot import GithubCopilot
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
 
 def create_app() -> FastAPI:
     _app = FastAPI()
@@ -43,9 +43,15 @@ async def audio(websocket: WebSocket):
 
 
 @app.post("/message")
-async def message(body: MicoMessage) -> str:
+async def message(body: MicoMessage) -> MessageResponse:
+    data = MessageResponseData(action="ignore")
+    ignore_resp = MessageResponse(code=0, data=data)
     if not body.payload.is_final:
-        return ""
+        return ignore_resp
+
+    text = body.payload.results[0].text
+    if text in ["开灯", "关灯", "停", "大点儿声", "小点儿声", "几点了"]:
+        return ignore_resp
 
     # TODO support multiple sessions
     global last_message_time
@@ -55,11 +61,10 @@ async def message(body: MicoMessage) -> str:
     last_message_time = now
 
     # TODO support new session trigger by user message
-    text = body.payload.results[0].text
     logger.info(f"received text: {text}")
     text = gpt.chat(text)
     logger.info(f"response text: {text}")
-    return text
+    return MessageResponse(code=0, data=MessageResponseData(action="tts", tts=text))
 
 
 async def act(text: str) -> None:
@@ -72,4 +77,4 @@ async def act(text: str) -> None:
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="debug")
