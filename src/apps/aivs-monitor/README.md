@@ -10,4 +10,4 @@ make build-all
 
 TODO
 
-- [] 服务器地址可配置(最好音箱能serve一个web服务)
+- [ ] 服务器地址可配置(最好音箱能serve一个web服务) [lighttpd](../lighttp/)

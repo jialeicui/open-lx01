@@ -14,6 +14,8 @@ make
 make HTTPS_PROXY=http://x.x.x.x:xxxx
 ```
 
+或者也可以用我build好的image: docker pull jialeicui/lx01-build:latest && docker tag lx01:latest
+
 执行成功后会生成一个 `lx01:latest` 的 docker image, 内部有使用 `musl 1.1.14` 版本的各种编译链接的 toolchain
 
 ```sh
