@@ -203,10 +203,6 @@ const char* get_server_url() {
 int main() {
     wait_for_message_file_ready();
 
-    FILE *json_file = fopen(instruction_json_path, "r");
-    fseek(json_file, 0, SEEK_END);
-    long laste_offset = ftell(json_file);
-
     curl = curl_easy_init();
     if (!curl) {
         printf("curl init failed\n");
@@ -227,6 +223,10 @@ int main() {
     }
 
     const char *server_url = get_server_url();
+
+    FILE *json_file = fopen(instruction_json_path, "r");
+    fseek(json_file, 0, SEEK_END);
+    long laste_offset = ftell(json_file);
 
     char buf[1024];
     while (1) {

@@ -23,5 +23,5 @@ jobs:
 
       - name: Lint Check
         working-directory: src/apps/aivs-monitor
-        run: cppcheck --error-exitcode=1 .
+        run: make lint
 
