@@ -21,7 +21,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: python3.9
+          python-version: '3.9'
 
       - name: Install dependencies
         working-directory: ./server
