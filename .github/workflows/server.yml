@@ -1,0 +1,33 @@
+name: Server Lint and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        working-directory: src/server
+        run: make install-dev-dep
+
+      - name: Lint Check
+        working-directory: src/server
+        run: make lint
+

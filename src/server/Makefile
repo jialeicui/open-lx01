@@ -12,3 +12,4 @@ format:
 
 lint:
 	python -m mypy .
+	python -m ruff check .
