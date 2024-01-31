@@ -24,10 +24,10 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        working-directory: ./server
+        working-directory: src/server
         run: make install-dev-dep
 
       - name: Lint Check
-        working-directory: ./server
+        working-directory: src/server
         run: make lint
 
