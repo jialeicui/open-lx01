@@ -20,3 +20,6 @@ build:
 		main.c
 
 build-all: build-curl build-with-docker
+
+lint:
+	cppcheck --std=c99 --language=c --error-exitcode=1 --suppress=missingIncludeSystem .
