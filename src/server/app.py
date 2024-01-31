@@ -14,6 +14,7 @@ from llm.copilot import GithubCopilot
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def create_app() -> FastAPI:
     _app = FastAPI()
     return _app
@@ -37,7 +38,7 @@ async def audio(websocket: WebSocket):
     while True:
         data = await websocket.receive_bytes()
         if not speech_detector.process(data):
-            text = audio_to_text(speech_detector.bytes)
+            text = audio_to_text(speech_detector.bytes_content)
             speech_detector.reset()
             await act(text)
 
@@ -49,8 +50,13 @@ async def message(body: MicoMessage) -> MessageResponse:
     if not body.payload.is_final:
         return ignore_resp
 
+    if body.payload.results is None:
+        return ignore_resp
+
     text = body.payload.results[0].text
-    if text in ["开灯", "关灯", "停", "大点儿声", "小点儿声", "几点了"]:
+    if text is None:
+        return ignore_resp
+    if text in ["开灯", "关灯", "停", "大点声", "小点声", "几点了"]:
         return ignore_resp
 
     # TODO support multiple sessions
@@ -58,11 +64,11 @@ async def message(body: MicoMessage) -> MessageResponse:
     now = datetime.datetime.now().timestamp()
     if now - last_message_time > SESSION_TIMEOUT_SECONDS:
         gpt.new_session()
-    last_message_time = now
+    last_message_time = int(now)
 
     # TODO support new session trigger by user message
     logger.info(f"received text: {text}")
-    text = gpt.chat(text)
+    text = gpt.chat(text) or ""
     logger.info(f"response text: {text}")
     return MessageResponse(code=0, data=MessageResponseData(action="tts", tts=text))
 

@@ -14,12 +14,18 @@
 
 - [x] [主要服务分析](./doc/services.md)
 - [x] [逆向方法](./doc/reverse-engineering.md)
-- [x] [音箱上的自定义程序](./src/apps/aivs-monitor/)
 - [x] [交叉编译环境](./src/cross-build-env/)
+- [x] [音箱上的自定义程序](./src/apps/aivs-monitor/)
+    - [x] 自动上传交互文字到 server
+    - [x] 根据 server 应答播放文字 (官方tts)
+    - [x] 关键词匹配跳过上传（比如开灯/停等）
 - [x] [Web Server](./src/server/)
     - [x] 接收音箱对话记录
-    - [x] 使用 Github Copilot 生成应答
-    - [x] 用音箱播放应答
+    - [x] 声音检测 (目前未用到)
+    - [x] 大语言模型
+        - [x] [Moonshot](https://platform.moonshot.cn)
+        - [x] [Github Copilot](https://github.com/features/copilot)
+    - [ ] 支持各种配置的UI (进行中)
 - [ ] gdb-server(host=arm) + gdb(target=arm)
 - [ ] open-mico-aivs-lab
 - [ ] open-mipns-sai (使用 [porcupine](https://github.com/Picovoice/porcupine) 或 [kaldi](https://github.com/kaldi-asr/kaldi))

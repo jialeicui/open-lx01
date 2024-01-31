@@ -40,7 +40,7 @@ class SpeechDetector:
         self._has_speech = False
 
     @property
-    def bytes(self):
+    def bytes_content(self):
         return self._audio_buffer
 
     @property

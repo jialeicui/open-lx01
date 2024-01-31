@@ -18,7 +18,7 @@ def resample_to_16k(content: bytes) -> bytes:
     :param content: audio bytes
     :return: resampled audio bytes
     """
-    content = np.frombuffer(content, dtype=np.int16)
+    content = np.frombuffer(content, dtype=np.int16).tobytes()
     new_len = int(len(content) * 16000 / fs)
     return resample(content, new_len).astype(np.int16).tobytes()
 

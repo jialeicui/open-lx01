@@ -1,5 +1,7 @@
 ruff
 black
+mypy
+types-requests
 
 -r requirements.txt
 

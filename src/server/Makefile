@@ -10,3 +10,5 @@ format:
 	python -m ruff check --fix .
 	python -m black .
 
+lint:
+	python -m mypy .
