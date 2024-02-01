@@ -1,21 +1,14 @@
-DOWNLOAD_URL ?= "https://ftp.gnu.org/gnu/readline/readline-8.1.tar.gz"
-PREFIX ?= 
-DESTDIR ?= $(PWD)/../dists
-DOCKER_IMAGE ?= lx01:latest
+TOP_DIR ?= $(PWD)/../..
+include $(TOP_DIR)/scripts/config.mk
+include $(TOP_DIR)/scripts/build.mk
 
-NAME=$(shell basename $(shell pwd))
+SOURCE_CODE_URL ?= "https://ftp.gnu.org/gnu/readline/readline-8.1.tar.gz"
 
-.PHONY: build build-in-docker
+define build
+	cd $(PKG_BUILD_DIR) && \
+	./configure --prefix=$(PREFIX) --host=$(HOST) && \
+	make -j$(nproc) && \
+	make install DESTDIR=$(DESTDIR) && \
+	cd ../ && rm -rf $NAME
+endef
 
-build-with-docker:
-	docker run --rm -v $(PWD)/../:/build -w /build $(DOCKER_IMAGE) sh -c "cd $(NAME) && make build"
-
-build:
-	rm -rf ../build/$(NAME) && mkdir -pv ../build/$(NAME) && cd ../build \
-	&& wget -c $(DOWNLOAD_URL) -O $(NAME).tar.gz \
-	&& tar -xvf $(NAME).tar.gz -C $(NAME) --strip-components=1 \
-	&& cd $(NAME) \
-	&& ./configure --prefix=$(PREFIX) --host=$(HOST) \
-	&& make -j$(nproc) \
-	&& make install DESTDIR=$(DESTDIR) \
-	&& cd ../ && rm -rf $NAME

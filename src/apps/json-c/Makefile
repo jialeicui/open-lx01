@@ -1,22 +1,14 @@
-VER ?= "0.17-20230812"
-DOWNLOAD_URL ?= "https://github.com/json-c/json-c/archive/json-c-$(VER).tar.gz"
-PREFIX ?= 
-DESTDIR ?= $(PWD)/../dists
-DOCKER_IMAGE ?= lx01:latest
+TOP_DIR ?= $(PWD)/../..
+include $(TOP_DIR)/scripts/config.mk
+include $(TOP_DIR)/scripts/build.mk
 
-NAME=json-c
+SOURCE_CODE_URL ?= "https://github.com/json-c/json-c/archive/json-c-0.17-20230812.tar.gz"
+MD5SUM ?= 6d724389b0a08c519d9dd6e2fac7efb8
 
-.PHONY: build build-in-docker
+define build
+	cd $(PKG_BUILD_DIR) && \
+	cmake -DCMAKE_INSTALL_PREFIX=$(PREFIX) . && \
+	make -j$(nproc) && \
+	make install DESTDIR=$(DESTDIR)
+endef
 
-build-with-docker:
-	docker run --rm -v $(PWD)/../:/build -w /build $(DOCKER_IMAGE) sh -c "cd $(NAME) && make build"
-
-build:
-	rm -rf ../build/$(NAME) && mkdir -pv ../build/$(NAME) && cd ../build \
-	&& wget -c $(DOWNLOAD_URL) -O $(NAME).tar.gz \
-	&& tar -xvf $(NAME).tar.gz -C $(NAME) --strip-components=1 \
-	&& cd $(NAME) \
-	&& cmake -DCMAKE_INSTALL_PREFIX=$(PREFIX) . \
-	&& make -j$(nproc) \
-	&& make install DESTDIR=$(DESTDIR) \
-	&& cd ../ && rm -rf $NAME
