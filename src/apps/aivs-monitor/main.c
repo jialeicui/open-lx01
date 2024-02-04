@@ -153,7 +153,6 @@ int send_context_to_server(const char *url, const char *context) {
 }
 
 void mute_speaker_thread(void *arg) {
-    return;
     // dead loop and wait for tts playing and pause it
     for (;;) {
         if (speaker_playing()) {

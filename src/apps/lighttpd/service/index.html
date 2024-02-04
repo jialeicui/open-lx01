@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LX01固件上传</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .upload-section {
+            width: 60%;
+            margin: 0 auto;
+            padding: 15px;
+            border: 1px solid #dedede;
+            border-radius: 5px;
+            box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.1);
+        }
+        .upload-section h1 {
+            text-align: center;
+            color: #5a5a5a;
+        }
+        .upload-section button {
+            display: block;
+            width: 100px;
+            height: 30px;
+            margin: 20px auto;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-section">
+        <h1>LX01固件上传</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">上传</button>
+        </form>
+    </div>
+    <script>
+        var submitButton = document.querySelector('button[type="submit"]');
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Prevent the default form submission
+            e.preventDefault();
+
+            var file = document.querySelector('input[type="file"]').files[0];
+
+            // Disable the submit button
+            submitButton.disabled = true;
+
+            // Make the webdav request
+            fetch('/upload/file', {
+                method: 'PUT',
+                body: file,
+            }).then(function (response) {
+                if (response.ok) {
+                    // Change the button text and enable the button
+                    submitButton.innerHTML = '刷入并重启';
+                    submitButton.disabled = false;
+                } else {
+                    alert('上传失败');
+                    // Enable the button
+                    submitButton.disabled = false;
+                }
+            }).catch(function (error) {
+                alert('发生了网络错误');
+                // Enable the button
+                submitButton.disabled = false;
+            });
+        });
+
+        submitButton.addEventListener('click', function () {
+            if (submitButton.innerHTML === '刷入并重启') {
+                // 阻止默认行为
+                event.preventDefault();
+                submitButton.disabled = true;
+
+                // 执行重启的POST请求
+                fetch('/upgrade', {
+                    method: 'POST',
+                }).then(function (response) {
+                    if (response.ok) {
+                        alert('重启成功');
+                    } else {
+                        alert('重启失败');
+                    }
+                }).catch(function (error) {
+                    alert('发生了网络错误');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

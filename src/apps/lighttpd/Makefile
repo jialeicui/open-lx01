@@ -12,11 +12,11 @@ define build
 	export LUA_CFLAGS="-I$(EXTRA_INCLUDE_DIR)" && \
 	export LUA_LIBS="-L$(EXTRA_LIB_DIR) -llua" && \
 	./autogen.sh && \
-    ./configure --build=arm-linux --host=$(HOST) --prefix=/usr/ --disable-static --enable-shared --without-pcre2 --without-zlib --with-lua && \
+    ./configure --build=arm-linux --host=$(HOST) --prefix=/data/ --disable-static --enable-shared --without-pcre2 --without-zlib --with-lua && \
 	make -j$(nproc) && \
 	make install DESTDIR=$(DESTDIR) && \
 	cp -v src/lighttpd $(DESTDIR)/bin/lighttpd && \
-	cp -v src/.libs/mod_magnet.so $(DESTDIR)/lib/ && \
+	cp -v src/.libs/*.so $(DESTDIR)/lib/ && \
 	$(copy_to_rootfs)
 endef
 
