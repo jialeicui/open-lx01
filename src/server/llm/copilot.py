@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import typing
 
 import requests
 from openai.types.chat import ChatCompletionMessage
@@ -13,11 +14,16 @@ from llm.llm import LLMChat
 class GithubCopilot(LLMChat):
     """Github Copilot API"""
 
-    def __init__(self, api_key: str | None = None, prompt: str = ""):
+    def __init__(
+        self,
+        api_key: str | None = None,
+        prompt: str | None = None,
+        **kwargs: typing.Any,
+    ):
         if api_key is None:
             api_key = self.get_host_key()
         self.api_key = api_key
-        super().__init__(prompt)
+        super().__init__("github", prompt=prompt, **kwargs)
 
         self.headers = {
             "User-Agent": "GitHubCopilotChat/0.8.0",

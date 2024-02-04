@@ -1,7 +1,11 @@
 ruff
 black
 mypy
+isort
+pytest
+
 types-requests
+types-peewee
 
 -r requirements.txt
 

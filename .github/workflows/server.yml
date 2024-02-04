@@ -31,3 +31,7 @@ jobs:
         working-directory: src/server
         run: make lint
 
+      - name: Unit Test
+        working-directory: src/server
+        run: make test
+
