@@ -1,6 +1,7 @@
 import datetime
-import pyaudio
+
 import numpy as np
+import pyaudio
 from scipy.signal import resample
 
 from audio.vad import SpeechDetector
