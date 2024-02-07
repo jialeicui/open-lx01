@@ -30,7 +30,7 @@ for patch in $PATCHES; do
 done
 
 if [ -d "$BASE_DIR"/root ]; then
-	#rsync -av "$BASE_DIR"/root/ .
+	rsync -av "$BASE_DIR"/root/ .
 fi
 
 popd
@@ -39,5 +39,5 @@ mksquashfs squashfs-root rootfs.img -comp xz -b 256K -noappend && mv rootfs.img 
 
 popd
 
-#rm -rf $WORK_DIR
+rm -rf $WORK_DIR
 
