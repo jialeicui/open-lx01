@@ -20,4 +20,3 @@ class TestHistorySvcDB(TestCase):
         assert history[0].provider == "moonshot"
         assert history[0].timestamp is not None
         assert history[0].id is not None
-

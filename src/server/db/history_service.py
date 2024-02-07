@@ -4,8 +4,6 @@ import abc
 import enum
 import time
 
-from peewee import Database
-
 from common.config import DataBaseConfig
 from db.db import init_db
 from db.models.history import History
@@ -36,8 +34,7 @@ class HistorySvcDummy(HistoryService):
 
 
 class HistorySvcDB(HistoryService):
-    def __init__(self, db: Database, provider: str):
-        self.db = db
+    def __init__(self, provider: str):
         self.provider = provider
 
     def save(
@@ -67,5 +64,6 @@ class HistorySvcDB(HistoryService):
 
 def get_history_svc(config: DataBaseConfig | None) -> HistoryService:
     if config and config.url:
-        return HistorySvcDB(init_db(config), "moonshot")
+        init_db(config)
+        return HistorySvcDB("moonshot")
     return HistorySvcDummy()
