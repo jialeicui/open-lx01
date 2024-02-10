@@ -25,3 +25,6 @@ jobs:
         working-directory: src/apps/aivs-monitor
         run: make lint
 
+      - name: Unit Test
+        working-directory: src/apps/aivs-monitor
+        run: make host-test
