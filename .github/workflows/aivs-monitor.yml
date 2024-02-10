@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup CppCheck
-        run: sudo apt-get update && sudo apt-get install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck libcurl4-nss-dev
 
       - name: Lint Check
         working-directory: src/apps/aivs-monitor
