@@ -15,8 +15,8 @@ LIBS := -lcurl -ljson-c
 EXEC := aivs-monitor
 TEST_EXEC := test
 
-MAIN_SRCS := main.c json.c
-TEST_SRCS := CuTest.c json.c test.c
+MAIN_SRCS := main.c json.c monitor.c
+TEST_SRCS := CuTest.c json.c test.c monitor.c
 
 MAIN_OBJS := $(MAIN_SRCS:.c=.o)
 TEST_OBJS := $(TEST_SRCS:.c=.o)
