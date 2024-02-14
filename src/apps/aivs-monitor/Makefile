@@ -47,5 +47,5 @@ host-test: $(TEST_OBJS)
 	./$(TEST_EXEC)
 
 clean:
-	rm -f $(MAIN_OBJS) $(TEST_OBJS) $(EXEC) $(TEST_EXEC)
+	rm -f $(MAIN_OBJS) $(TEST_OBJS) $(EXEC) $(TEST_EXEC) test.json.tmp
 
