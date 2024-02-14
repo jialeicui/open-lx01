@@ -6,12 +6,22 @@
 
 monitor_t g_monitor;
 int play_the_original_answer = 0;
+int stop = 0;
+
+void wait_for_message_file_ready(const char *file_path) {
+    while (access(file_path, F_OK) != 0) {
+        usleep(1000 * 1000);
+    }
+}
+
 
 void monitor_init(monitor_t monitor) {
     g_monitor = monitor;
 }
 
 int monitor_start(const char *file_to_monitor) {
+    wait_for_message_file_ready(file_to_monitor);
+
     int fd = inotify_init();
     if (fd < 0) {
         perror("inotify_init");
@@ -31,7 +41,7 @@ int monitor_start(const char *file_to_monitor) {
     muter_t muter = {0};
 
     char buf[1024];
-    while (1) {
+    while (!stop) {
         ssize_t n = read(fd, buf, sizeof(buf));
         if (n < 0) {
             perror("read");
@@ -117,4 +127,8 @@ int monitor_start(const char *file_to_monitor) {
         }
         laste_offset = ftell(json_file);
     }
+}
+
+void monitor_stop() {
+    stop = 1;
 }

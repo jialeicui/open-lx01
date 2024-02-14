@@ -16,3 +16,4 @@ typedef struct {
 
 void monitor_init(monitor_t monitor);
 int monitor_start(const char *file_to_monitor);
+void monitor_stop();

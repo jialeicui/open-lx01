@@ -166,13 +166,6 @@ void *mute_speaker_thread(void *arg) {
     printf("mute speaker thread exit\n");
 }
 
-void wait_for_message_file_ready() {
-    // wait for message file ready
-    while (access(instruction_json_path, F_OK) != 0) {
-        usleep(1000 * 1000);
-    }
-}
-
 const char* get_server_url() {
     if (final_url != NULL) {
         return final_url;
@@ -215,8 +208,6 @@ void send_context(const char *data) {
 }
 
 int main() {
-    wait_for_message_file_ready();
-
     curl = curl_easy_init();
     if (!curl) {
         printf("curl init failed\n");
