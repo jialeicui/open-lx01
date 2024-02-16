@@ -215,8 +215,6 @@ int main() {
     }
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
-    curl_easy_cleanup(curl);
-
     monitor_t monitor = {
         .mute_cb = mute_cb,
         .act_tts = act_tts,
@@ -226,6 +224,8 @@ int main() {
 
     monitor_init(monitor);
     monitor_start(instruction_json_path);
+
+    curl_easy_cleanup(curl);
 
     return 0;
 }
