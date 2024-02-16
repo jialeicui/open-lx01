@@ -2,7 +2,7 @@ import datetime
 import logging
 
 import uvicorn
-from fastapi import FastAPI, WebSocket
+from fastapi import Depends, FastAPI, WebSocket
 
 from api.model import MessageResponse, MessageResponseData, MicoMessage
 from api.persona import HISTORY_TEACHER
@@ -10,6 +10,7 @@ from audio.asr import audio_to_text
 from audio.vad import SpeechDetector
 from common.config import load_config
 from common.constants import SESSION_TIMEOUT_SECONDS
+from db.history_service import HistoryService, get_history_svc
 from llm.instance import get_llm
 
 logging.basicConfig(level=logging.DEBUG)
@@ -29,6 +30,10 @@ if not config.llm.prompt:
 # TODO support multiple sessions and prompts switching
 llm_chat = get_llm(config)
 last_message_time: int = 0
+
+
+def get_hv() -> HistoryService:
+    return get_history_svc(config.db)
 
 
 # api for automatic speech recognition, accepts audio stream
@@ -75,6 +80,13 @@ async def message(body: MicoMessage) -> MessageResponse:
     text = llm_chat.chat(text) or ""
     logger.info(f"response text: {text}")
     return MessageResponse(code=0, data=MessageResponseData(action="tts", tts=text))
+
+
+@app.get("/history")
+async def history(
+    limit: int = 10, offset: int = 0, history_svc: HistoryService = Depends(get_hv)
+) -> list[dict]:
+    return [h.to_dict() for h in history_svc.get(limit, offset)]
 
 
 async def act(text: str) -> None:
