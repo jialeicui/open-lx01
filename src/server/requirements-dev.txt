@@ -3,6 +3,7 @@ black
 mypy
 isort
 pytest
+pytest-xdist
 
 types-requests
 types-peewee

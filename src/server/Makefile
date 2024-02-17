@@ -16,4 +16,4 @@ lint:
 	python -m ruff check .
 
 test:
-	python -m pytest ./tests
+	python -m pytest ./tests -n auto -vv

@@ -55,14 +55,13 @@ class HistorySvcDB(HistoryService):
     def get(self, limit: int = 10, offset: int = 0) -> list[History]:
         return list(
             History.select()
-            .where(History.provider == self.provider)
             .order_by(History.timestamp.desc())
             .limit(limit)
             .offset(offset)
         )
 
 
-def get_history_svc(config: DataBaseConfig | None) -> HistoryService:
+def get_history_svc(config: DataBaseConfig | None = None) -> HistoryService:
     if config and config.url:
         init_db(config)
         return HistorySvcDB("moonshot")
