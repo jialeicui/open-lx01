@@ -22,7 +22,7 @@ class TestHistorySvcDB(TestCase):
         svc = get_history_svc(None)
         assert isinstance(svc, HistorySvcDummy)
 
-        config: DataBaseConfig = DataBaseConfig(url=f"sqlite:///{self.db_file}")
+        config = DataBaseConfig(url=f"sqlite:///{self.db_file}")
         svc = get_history_svc(config)
         svc.save("message", MessageRole.USER, "moonshot")
 

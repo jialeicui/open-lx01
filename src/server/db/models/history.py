@@ -1,5 +1,5 @@
 from peewee import AutoField, CharField, IntegerField, TextField
-from playhouse.shortcuts import model_to_dict
+from playhouse.shortcuts import model_to_dict  # type:ignore
 
 from db.models import BaseModel
 
@@ -12,5 +12,5 @@ class History(BaseModel):
     # xiaomi, github-co-pilot, moonshot, etc
     provider = CharField()
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return model_to_dict(self)
