@@ -68,6 +68,9 @@ async def message(body: MicoMessage) -> MessageResponse:
     if text in ["开灯", "关灯", "停", "大点声", "小点声", "几点了"]:
         return ignore_resp
 
+    if '后提醒我' in text:
+        return ignore_resp
+
     # TODO support multiple sessions
     global last_message_time
     now = datetime.datetime.now().timestamp()
