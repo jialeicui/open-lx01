@@ -17,17 +17,14 @@ class MessageRole(enum.Enum):
 
 class HistoryService(abc.ABC):
     @abc.abstractmethod
-    def save(self, message: str, role: MessageRole, provider: str) -> None:
-        ...
+    def save(self, message: str, role: MessageRole, provider: str) -> None: ...
 
     @abc.abstractmethod
-    def get(self, limit: int = 10, offset: int = 0) -> list[History]:
-        ...
+    def get(self, limit: int = 10, offset: int = 0) -> list[History]: ...
 
 
 class HistorySvcDummy(HistoryService):
-    def save(self, message: str, role: MessageRole, provider: str) -> None:
-        ...
+    def save(self, message: str, role: MessageRole, provider: str) -> None: ...
 
     def get(self, limit: int = 10, offset: int = 0) -> list[History]:
         return []

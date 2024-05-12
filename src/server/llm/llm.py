@@ -32,8 +32,7 @@ class LLMChat:
             self.messages.append({"role": "system", "content": self.prompt})
 
     @abstractmethod
-    def round(self, text: str, temperature: float) -> ChatCompletionMessage:
-        ...
+    def round(self, text: str, temperature: float) -> ChatCompletionMessage: ...
 
     def _save_message(self, message: str | None, role: MessageRole) -> None:
         if message is None:
